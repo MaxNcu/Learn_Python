@@ -1,0 +1,7 @@
+def test1(x):
+    return (x)
+def test2():
+    return test1
+
+a = test2()
+print(a('浪子666'))

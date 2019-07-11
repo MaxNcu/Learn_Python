@@ -1,0 +1,20 @@
+insert into admin (id,user,pwd) VALUES (1,xie,zhao);
+insert into admin (2,zhao,xoe);
+insert into admin (user) values (xia);
+DELETE from user where id=85;
+delete from user where name='xia';
+INSERT into admin (id,name,age) VALUEs (1,xaam,15)
+delete from admin where id=15;
+DELETE from admin where id =48;
+insert into admin values (1,xzzm,zhaoh);
+select * from admin where id = 15;
+UPDATE user set name='xx' where id=415;
+update admin set name='zazz' where pas='123456'
+delete from admin where id = 15;
+update user set name='sad' where id = 15;
+show databease;
+create table mse(
+id int PRIMARY key into_increment,
+title VARCHAR (10),
+content VARCHAR (100)
+)charset=utf8;
