@@ -1,0 +1,23 @@
+卷 数据 的文件夹 PATH 列表
+卷序列号为 00000093 0002:D245
+E:.
+│  manage.py		启动文件
+│  
+└─app			总项目文件夹
+    │  models.py	数据库模块
+    │  __init__.py     初始化app对象
+    │  
+    ├─admin		后台管理模块
+    │      forms.py	后台表单验证
+    │      view.py	后台视图函数
+    │	    __init__.py 后台创建蓝图
+    │      
+    ├─home		前台展示模块
+    │      forms.py	前台表单验证
+    │      view.py	前台视图函数
+    │	    __init__.py 前台创建蓝图
+    │      
+    ├─static		静态文件夹/css/js/图片
+    └─templates	HTML模板
+        ├─admin	管理模板
+        └─home		前台模板

@@ -1,0 +1,104 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {{ super() }}
+
+
+<div class="container">
+    <div class="navbar navbar-default">
+<div class="navbar-heading">
+    <a class="nav navbar-brand" href="{{url_for('web.index')}}">Meizi图</a>
+</div>
+    <ul class="nav navbar-nav">
+        <li><a href="http://www.langzi.fun/index.html">首页</a></li>
+        <li><a href="http://www.langzi.fun/categories/Flask/">Flask 知识点</a></li>
+        <li><a href="http://www.langzi.fun/Flask%20MEIZI小项目实战.html">Meizi图项目地址</a></li>
+    </ul>
+
+        <form class="navbar-form container has-success" method="POST" action="/search/" >
+        <div class="input-group">
+                        <div class="input-group-addon">关键词:</div>
+            <input type="text" class="form-control-lg" name="idx">
+
+            </div>
+
+        <button type="submit" class="btn btn-default">搜索</button>
+    </form>
+
+        <div class="panel panel-default">
+   <div class="panel-heading text-center">
+      一些说明
+   </div>
+    <!--<div class="panel-body text-center">-->
+         <!--访客数据-->
+           <!--<table class="table">-->
+      <!--<th class="text-center">时间</th><th class="text-center">人数</th>-->
+      <!--<tr><td>上半夜</td><td>200</td></tr>-->
+      <!--<tr><td>下半夜</td><td>400</td></tr>-->
+   <!--</table>-->
+    <!--</div>-->
+        <!--<div class="panel-body text-center">-->
+         <!--访客男女比例-->
+                       <!--<table class="table">-->
+      <!--<th class="text-center">男女人数</th><th class="text-center">人数</th>-->
+      <!--<tr><td>男</td><td>500000</td></tr>-->
+      <!--<tr><td>女</td><td>0</td></tr>-->
+   <!--</table>-->
+    </div>
+        <div class="panel-footer">
+         <div class="list-group">
+             <li class="list-group-item">其实没什么想说的</li>
+             <li class="list-group-item">总觉得页面布局有点奇怪</li>
+             <li class="list-group-item">相当于没说...</li>
+             <li class="list-group-item">2018年8月4日03:42:22</li>
+         </div>
+
+
+        </div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+    <!--<form method="POST" action="/search/" class="container has-success">-->
+        <!--<div class="input-group">-->
+            <!--<div class="input-group-addon">关键词:</div>-->
+            <!--<input type="text" class="form-control-lg" name="idx">-->
+
+            <!--</div>-->
+        <!--<button  type="submit" class="btn btn-primary btn-lg btn-blocks">搜索</button>-->
+
+    <!--</form>-->
+
+<div id="myCarousel" class="carousel slide">                        <!--设置轮播器区域样式，设置轮播器滚动样式-->
+    <ol class="carousel-indicators">                                <!--设置轮播器列表区域样式，就是小圆点区域样式-->
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>    <!--设置当前列表首选-->
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">                                    <!--设置轮播器图片区域-->
+        <div class="item active tp1">                                <!--设置轮播器图片样式-->
+            <a href="#"><img src="../static/image/2.jpg" alt="第一张"></a>
+        </div>
+        <div class="item tp2">
+            <a href="#"><img src="../static/image/3.jpg" alt="第二张"></a>
+        </div>
+        <div class="item tp3">
+            <a href="#"><img src="../static/image/4.jpg" alt="第三张"></a>
+        </div>
+    </div>
+    <!--设置轮播器箭头区域-->
+    <a href="#myCarousel" data-slide="prev" class="carousel-control left">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a href="#myCarousel" data-slide="next" class="carousel-control right">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+	//self.setInterval("loadXMLDoc()",3000);
+	function loadXMLDoc()
+	{
+	var xmlhttp;
+	if (window.XMLHttpRequest)
+ 	 {// code for IE7+, Firefox, Chrome, Opera, Safari
+ 	 xmlhttp=new XMLHttpRequest();
+ 	 }
+	else
+ 	 {// code for IE6, IE5
+ 	 xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+	xmlhttp.onreadystatechange=function()
+ 	 {
+ 	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    document.getElementById("myp").innerHTML=xmlhttp.responseText;
+    }
+  	}
+	xmlhttp.open("POST","/index.html",true);
+	xmlhttp.send();
+	}
+	</script>
+	<button type="button" onclick="loadXMLDoc()">请求数据</button>
+	<p id="myp"></p>
+	<div id="myDiv"></div>
+<a href="https://blog.csdn.net/HES_C/article/details/82884464?utm_source=blogxgwz2"> url </a>
+</body>
+</html>

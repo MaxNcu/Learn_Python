@@ -1,0 +1,113 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {{ super() }}
+
+
+<div class="container">
+    <div class="navbar navbar-default">
+<div class="navbar-header">
+    <a class="navbar-brand" href="{{url_for('web.index')}}">Meizi</a>
+</div>
+    <ul class="nav navbar-nav">
+        <li><a href="http://www.langzi.fun/index.html">Blog 首页</a></li>
+        <li><a href="http://www.langzi.fun/categories/Flask/">Flask 知识点</a></li>
+        <li><a href="http://www.langzi.fun/Flask%20MEIZI小项目实战.html">Meizi图项目地址</a></li>
+    </ul>
+
+        <form class="navbar-form navbar-right has-success" method="POST" action="/search/" >
+        <div class="input-group">
+            <div class="input-group-addon">关键词:</div>
+            <input type="text" class="form-control-lg" name="idx">
+        </div>
+        <button type="submit" class="btn btn-default btn-sm">搜索</button>
+        </form>
+
+    </div>
+</div>
+
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="list-group side-bar">
+                <a href="{{url_for('web.search',idx='可爱')}}" class="list-group-item active">可爱</a>
+                <a href="{{url_for('web.search',idx='清纯')}}" class="list-group-item">清纯</a>
+                <a href="{{url_for('web.search',idx='清秀')}}" class="list-group-item">清秀</a>
+                <a href="{{url_for('web.search',idx='清新')}}" class="list-group-item">清新</a>
+                <a href="{{url_for('web.search',idx='气质')}}" class="list-group-item">气质</a>
+                <a href="{{url_for('web.search',idx='萌妹')}}" class="list-group-item">萌妹</a>
+                <a href="{{url_for('web.search',idx='萝莉')}}" class="list-group-item">萝莉</a>
+            </div>
+        </div>
+
+
+        <div class="col-md-10">
+            <div class="news-list">
+
+                <div class="news-list-item clearfix">
+                    <div class="col-md-3">
+                        <img src="../static/image/1.jpg">
+                    </div>
+                    <div class="col-md-9">
+                        <a href="http://www.langzi.fun/categories/SQL-注入攻击/" class="title">来学习一下SQL注入的基础知识</a>
+                        <div class="info">
+                            <span>作者:langzi</span> ·
+                            <span>阅读:654</span> ·
+                            <span>收藏:62</span> ·
+                            <span>评论:12</span>
+                        </div>
+                    </div>
+                </div>
+
+                                <div class="news-list-item clearfix">
+                    <div class="col-md-3">
+                        <img src="../static/image/2.jpg">
+                    </div>
+                    <div class="col-md-9">
+                        <a href="http://www.langzi.fun/Debian基础笔记.html" class="title">少年，你听说过Debian吗</a>
+                        <div class="info">
+                            <span>作者:langzi</span> ·
+                            <span>阅读750</span> ·
+                            <span>收藏:20</span> ·
+                            <span>评论:10</span>
+                        </div>
+                    </div>
+                </div>                <div class="news-list-item clearfix">
+                    <div class="col-md-3">
+                        <img src="../static/image/3.jpg">
+                    </div>
+                    <div class="col-md-9">
+                        <a href="http://www.langzi.fun/Flask%20Wtforms%20表单验证.html" class="title">Flask的WWWTForms模块</a>
+                        <div class="info">
+                            <span>作者:langzi</span> ·
+                            <span>阅读:30</span> ·
+                            <span>收藏:10</span> ·
+                            <span>评论:1</span>
+                        </div>
+                    </div>
+                </div>                <div class="news-list-item clearfix">
+                    <div class="col-md-3">
+                        <img src="../static/image/4.jpg">
+                    </div>
+                    <div class="col-md-9">
+                        <a href="http://www.langzi.fun/categories/WEB-前端框架/" class="title">WEB前端框架</a>
+                        <div class="info">
+                            <span>作者:langzi</span> ·
+                            <span>阅读:650421</span> ·
+                            <span>收藏:3210</span> ·
+                            <span>评论:829</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+{% endblock %}

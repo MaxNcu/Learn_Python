@@ -1,0 +1,52 @@
+
+
+{% extends 'base.html'%}
+{% block title%} SHOW DATAS {% endblock%}
+{% block content%}
+
+
+ <ul class="nav nav-tabs">
+<li><a href="{%url 'add_tasks' %}" >Add Tasks</a> </li>
+<li class="active"><a href="{% url 'show' %}" >Get Tasks</a> </li>
+</ul>
+
+
+    {% for k in bea_list.object_list  %}
+        {% for key,value in k.items %}
+        {{key}}:{{value}}<br>
+        {%endfor%}
+        <hr>
+        <br><br>
+    {% endfor %}
+
+
+    <br>
+<form>
+    COMMENT:
+    {% load static %}
+<script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    		<textarea name="editor1"></textarea>
+		<script>
+		    CKEDITOR.replace( 'editor1' , {uiColor: '#9AB8F3'});
+		</script>
+
+
+</form>
+
+<br>
+    {# 存在上一页 #}
+    {% if bea_list.has_previous %}
+<button type="button" class="btn btn-success"><a href="?page={{ bea_list.previous_page_number}}">上一页</a>
+</button>
+
+    {% endif %}
+
+    {# 存在下一页 #}
+    {% if bea_list.has_next %}
+<button type="button" class="btn btn-success">        <a href="?page={{ bea_list.next_page_number}}">下一页</a>
+
+</button>
+
+    {% endif %}
+
+{%endblock%}

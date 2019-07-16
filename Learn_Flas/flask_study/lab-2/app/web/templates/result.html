@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {{ super() }}
+<div class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="http://127.0.0.1:5000/index/">返回主页</a></li>
+        <li><a href="http://www.langzi.fun/Flask%20MEIZI小项目实战.html">下载图片</a></li>
+    </ul>
+</div>
+
+<div class="panel panel-success">
+    <div class="panel panel-heading">
+        一共为你搜索到x条数据
+    </div>
+
+
+</div>
+<div class="panel panel-body">
+{% for x,y,z in data %}
+<div class="col-md-4 ">
+
+
+
+
+    <a  class="text-center" href = "{{ y }}">
+ {{ z }}
+        <img class="img-circle " align="center" border='1' src="{{ x }}" height=282 width=192 > </a>
+
+    <hr>
+
+
+</div>
+</div>
+{% endfor %}
+
+{% endblock %}
+
+
+
+

@@ -1,0 +1,59 @@
+卷 数据 的文件夹 PATH 列表
+卷序列号为 000000E5 0002:D245
+E:.
+│  1.txt
+│  
+└─app # 根目录
+    │  config.py 	# 配置文件，开启Debug模式等等
+    │  run.py 	  	# 启动文件
+    │  __init__.py	# 初始化文件，注册蓝图，初始化 app = Flask(__name__,template_folder=('web/templates'),static_folder=('web/static'))
+    │  
+    └─web		# 核心业务处理，model层
+        │  check_forms.py 		# 表单验证，暂时没用到
+        │  cretae_data_pymysql.py	# 创建数据库模型，没用到
+        │  Imginfo.py			# 妹子详细信息，没用到
+        │  Mmzi.py			# 核心处理函数，接受参数，数据库查询，返回结果
+        │  __init__.py			# 初始化，注册蓝图，然后执行Mmzi.py
+        │  
+        ├─static			# 静态文件
+        │  ├─css
+        │  │      bootstrap-theme.css
+        │  │      bootstrap-theme.css.map
+        │  │      bootstrap-theme.min.css
+        │  │      bootstrap-theme.min.css.map
+        │  │      bootstrap.css
+        │  │      bootstrap.css.map
+        │  │      bootstrap.min.css
+        │  │      bootstrap.min.css.map
+        │  │      
+        │  ├─fonts
+        │  │      glyphicons-halflings-regular.eot
+        │  │      glyphicons-halflings-regular.svg
+        │  │      glyphicons-halflings-regular.ttf
+        │  │      glyphicons-halflings-regular.woff
+        │  │      glyphicons-halflings-regular.woff2
+        │  │      
+        │  ├─image
+        │  │      1.jpg
+        │  │      2.jpg
+        │  │      3.jpg
+        │  │      4.jpg
+        │  │      5.jpg
+        │  │      6.jpg
+        │  │      test.jpg
+        │  │      
+        │  └─js
+        │          bootstrap.js
+        │          bootstrap.min.js
+        │          jquery.js
+        │          npm.js
+        │          
+        └─templates		# 模板HTML文件
+                404.html	# 404页面
+                index.html	# 主页
+                layout.html	# jinja2模板
+                referrer-killer.js	# 用不到
+                result.html	# 返回结果的页面
+		down.html	#下载一些代码，
+		downimg.html	# 下载图片
+                

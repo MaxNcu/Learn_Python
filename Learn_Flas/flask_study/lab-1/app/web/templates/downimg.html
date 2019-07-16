@@ -1,0 +1,83 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {{ super() }}
+    <div class="navbar navbar-default">
+<div class="navbar-header">
+    <a class="navbar-brand" href="{{url_for('web.index')}}">Meizi图</a>
+</div>
+    <ul class="nav navbar-nav">
+        <li><a href="http://www.langzi.fun/index.html">首页</a></li>
+        <li><a href="http://www.langzi.fun/categories/Flask/">Flask 知识点</a></li>
+        <li><a href="http://www.langzi.fun/Flask%20MEIZI小项目实战.html">Meizi图项目地址</a></li>
+    </ul>
+    </div>
+
+<div class="panel panel-default">
+        <div class="panel-heading ">
+            直接下载图片的代码
+        </div>
+         <div class="list-group">
+             <li class="list-group-item">把下面的代码复制保存到本地py文件</li>
+             <li class="list-group-item">使用的是Python3版本，CMD下:Python3 你保存的文件名.py</li>
+             <li class="list-group-item">自动在目录下创建文件夹，图片保存在该文件夹下面</li>
+             <li class="list-group-item">需要接受两个参数，title是标题，url是列表，列表中是图片的地址</li>
+             <li class="list-group-item">依赖requests库</li>
+             <li class="list-group-item">2018年8月4日23:51:37</li>
+         </div>
+{% set title=data_title%}
+   {% set url=data_url%}
+            <div class="font-weight-light">
+                <pre>
+
+# -*- coding: utf-8 -*-
+# @Time    : 2018/8/4 0004 18:51
+# @Author  : Langzi
+# @Blog    : www.langzi.fun
+# @File    : download_meizi.py
+# @Software: PyCharm
+# Python_Version: Python3
+import sys
+import requests
+import threading
+import os
+
+title='{{title}}'
+url={{url|replace("|","'")}}
+def download(title,url):
+    headers={
+                'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
+                'Referer':'http://www.mzitu.com/zipai/'
+
+    }
+    if os.path.exists(title):
+        pass
+    else:
+        os.mkdir(title)
+        #Python2判断路径的编码，不同电脑编码都不一样
+        #path = os.path.join(os.getcwd(), title.encode('utf-8')) if isinstance(os.getcwd(), unicode) else os.path.join(os.getcwd().encode('utf-8'),title.encode('utf-8'))
+        path = os.path.join(os.getcwd(), title)
+        for _id,_name in enumerate(url):
+            try:
+                name = path + '\\' + str(_id)+'.jpg'
+                with open(name,'wb') as s:
+                    try:
+                        r = requests.get(_name,headers=headers,timeout=5)
+                        print (str(_id),str(_name),r.status_code)
+                        s.write(r.content)
+                    except Exception as e:
+                        print (e)
+            except Exception as e:
+                print (e)
+
+
+download(title=title,url=url)
+
+
+
+
+                </pre>
+
+            </div>
+
+{% endblock %}
+

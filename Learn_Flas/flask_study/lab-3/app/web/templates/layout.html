@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Meizi</title>
+
+
+</head>
+<body>
+{% block head %}
+<link rel="stylesheet" href='{{url_for("static",filename="css/bootstrap-theme.min.css")}}'>
+<link rel="stylesheet" href='{{url_for("static",filename="css/bootstrap.min.css")}}'>
+<link rel="stylesheet" href='{{url_for("static",filename="css/main.css")}}'>
+
+{% endblock %}
+
+
+
+{% block content %}
+{% endblock %}
+
+
+
+{% block foot %}
+<link rel="stylesheet" href='{{url_for("static",filename="js/jquery.js")}}'>
+<link rel="stylesheet" href='{{url_for("static",filename="js/bootstrap.min.js")}}'>
+
+{% endblock %}
+</body>
+</html>

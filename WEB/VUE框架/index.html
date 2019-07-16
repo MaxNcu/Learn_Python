@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>langzi</title>
+</head>
+<body >
+<div id="app">
+<div>
+    <input type="text" v-model="name">
+    <span>当前输入用户名为:{{name}}</span>
+</div>
+<div>
+    <input type="text" v-model="age">
+    <span v-show="age">当前输入年龄为:{{age}}</span>
+</div>
+<div>
+<input type="text" v-model="sex">
+<span>当前输入性别为:{{sex}}</span>
+</div>
+</div>
+<script src="lib/vue.js"></script>
+<script src="js/html.js"></script>
+
+</body>
+</html>

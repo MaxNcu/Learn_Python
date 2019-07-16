@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {{ super() }}
+
+
+
+<div class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="{{url_for('web.index')}}">返回主页</a></li>
+        <li><a href="{{url_for('web.get_code')}}">获取所有妹子图信息并且保存到数据库的代码</a></li>
+
+    </ul>
+</div>
+
+<div class="panel panel-success">
+        <div class="panel panel-heading">
+        一共为你搜索到 {{data|length()}} 条数据
+    </div>
+
+</div>
+
+
+<div class="panel panel-body">
+{% for yy,x,y,z,zz in data %}
+
+<div class="col-md-4 center">
+
+    <a  class="text-center" href = "{{ y }}">
+        <img class="img-circle img-responsive center"  border='1' src="{{ z }}" height=282 width=192 > </a>
+<div>
+    <a  class="text-center" href = "{{ y }}">
+        {{ x }}</a></div>
+
+
+<form  method="POST" action="/downimg/">
+    <button type="submit" class="btn btn-primary" name="name" value="{{y}}">下载</button>
+</form>
+
+
+
+
+</div>
+
+
+    <hr>
+</div>
+
+</div>
+
+{% endfor %}
+
+{% endblock %}
+
+
+
+

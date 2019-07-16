@@ -1,0 +1,62 @@
+卷 软件 的文件夹 PATH 列表
+卷序列号为 000000A2 C6A2:AC05
+F:.
+│  2.txt
+│  
+├─app	# 主目录
+│  │  run.py	# 主启动文件
+│  │  
+│  ├─data	# 临时缓存文件
+│  │      18-10-29-21-35-52ip.txt
+│  │      18-10-29-21-35-52url.txt
+│  │      
+│  └─web	# 
+│      │  config.py
+│      │  crawl.py
+│      │  database.py
+│      │  get_info.py
+│      │  runmain.py
+│      │  runmain.pyc
+│      │  __init__.py
+│      │  
+│      ├─masscan
+│      │      masscan
+│      │      masscan.exe
+│      │      
+│      ├─static
+│      │  │  
+│      │  ├─css
+│      │  │      bootstrap-theme.css
+│      │  │      bootstrap-theme.css.map
+│      │  │      
+│      │  ├─fonts
+│      │  │      glyphicons-halflings-regular.eot
+│      │  │      glyphicons-halflings-regular.svg
+│      │  │      glyphicons-halflings-regular.ttf
+│      │  │      
+│      │  ├─image
+│      │  │      test.jpg
+│      │  │      
+│      │  └─js
+│      │          bootstrap.js
+│      │          bootstrap.min.js
+│      │          jquery.js
+│      │          npm.js
+│      │          
+│      └─templates
+│              404.html
+│              cms_map.html
+│              index.html
+│              ip_map.html
+│              layout.html
+│              login.html
+│              result.html
+│              search.html
+│              subdomain.html
+│              urls.html
+│              
+└─安装方法
+        requirement.txt
+        WinPcap_4_1_2.exe
+        readme.txt
+        

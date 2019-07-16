@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>返回信息</title>
+</head>
+<body>
+
+{#{{ data }} #}
+
+{% for x,y,z in data %}
+<img src="{{ x }}">
+    <br>
+    <a href = "{{ y }}">
+    <br>
+     {{ z }}
+
+    <br>
+{% endfor %}
+
+{# 啊啊啊啊jinjia2的注释啊啊啊啊啊 #}
+</body>
+</html>
