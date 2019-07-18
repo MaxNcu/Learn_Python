@@ -1,18 +1,1 @@
-CPython27Lib
-
-C:\Python27\Lib
-
-C:\Python27\Lib
-
-pyinstaller.py -D -p F:\Python27\Lib -i logo.ico yellow.py --upx-dir E:\Pythonsetup\setup\upx-master\upx-master
-	      -F   生成单一文件
-
-
-pyinstaller.exe -F -p F:\Python27\Lib -i logo.ico yellow.py --upx-dir E:\Pythonsetup\setup\upx-master\upx-master
-
-F:\Python27\Lib
-
------------------------------------------------------------------------
-print unicode('成功:','utf-8')  
-print unicode(strName,'utf-8')  
-#strName 是字符串                 
+pyinstaller -F -i logo.ico main.py --upx-dir C:\python2exe\upx394a

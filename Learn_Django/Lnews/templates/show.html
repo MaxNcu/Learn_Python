@@ -1,0 +1,25 @@
+{%extends 'base.html'%}
+{%block title%} Index {% endblock %}
+
+{%block content%}
+<h1>Counts:{{counts}}</h1>
+ 	    {% for k in news_result.object_list  %}
+Title : {{k.title}}<br>
+URL : <a href="{{k.content}}">{{k.content}}</a> <br>
+	       DateTime : {{k.datetime}}<br>
+<hr>
+
+	        {%endfor%}
+
+<br>
+<br>
+{% if news_result.previous_page_number%}
+<button type="button" class="btn btn-success"><a href="?page={{ news_result.previous_page_number}}&keyword={{keyword}}">上一页</a>
+</button>
+	    {% endif %}
+{% if news_result.next_page_number%}
+
+<button type="button" class="btn btn-success">        <a href="?page={{ news_result.next_page_number}}&keyword={{keyword}}">下一页</a>
+	    {% endif %}
+{% endblock %}
+
