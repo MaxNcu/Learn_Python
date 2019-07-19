@@ -1,0 +1,28 @@
+[[source]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+verify_ssl = true
+name = "pypi"
+
+[dev-packages]
+
+[packages]
+requests = "*"
+pyinstaller = "*"
+pycrypto = "*"
+bs4 = "*"
+pymysql = "*"
+pytz = "*"
+list = "*"
+aiomultiprocess = "*"
+aiofiles = "*"
+aiohttp = "*"
+python-docx = "*"
+selenium = "*"
+pillow = "*"
+mechanize = "*"
+psutil = "*"
+aiodns = "*"
+playsound = "*"
+
+[requires]
+python_version = "3.6"

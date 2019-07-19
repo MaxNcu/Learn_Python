@@ -1,0 +1,20 @@
+python -m nuitka --recurse-all --standalone cc.py
+
+python -m nuitka --standalone back.py
+
+
+
+# 可以用的打包方式
+python -m nuitka --recurse-all --recurse-plugins=F:\Python27\Lib --remove-output --plugin-enable=enum_compat back.py
+# 带图标并且有窗口
+python3 -m nuitka --recurse-all --recurse-plugins=F:\Python3\Lib --remove-output --icon=logo.ico --plugin-enable=enum_compat run.py
+# 不带窗口不带图标
+python -m nuitka --recurse-all --recurse-plugins=F:\Python27\Lib --remove-output --plugin-enable=enum_compat --windows-disable-console back.py
+
+# 不删除辅助文件夹
+python -m nuitka --recurse-all --recurse-plugins=F:\Python27\Lib --icon=logo.ico --plugin-enable=enum_compat back.py
+
+# 其他可运行
+
+
+python -m nuitka --recurse-all --recurse-plugins=F:\Python27\Lib --standalone --remove-output --icon=logo.ico --plugin-enable=enum_compat back.py

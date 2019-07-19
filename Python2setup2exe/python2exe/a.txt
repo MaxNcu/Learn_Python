@@ -1,0 +1,1 @@
+pyinstaller -F -i logo.ico main.py --upx-dir C:\python2exe\upx394a
