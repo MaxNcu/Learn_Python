@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>usage.html</title>
+
+</head>
+
+<body>
+
+<h1 id="basic-usages">Basic Usages</h1>
+<p>Here are some exampes to show basic usage of <a href="https://github.com/dashingsoft/pyarmor">Pyarmor</a>.</p>
+<p>All of first,</p>
+<ul>
+<li>Open a command box, enter the path of <a href="https://github.com/dashingsoft/pyarmor">Pyarmor</a> installed</li>
+<li>Run pyarmor.py with your favor python</li>
+</ul>
+<p>Then following the steps below to learn how to use <a href="https://github.com/dashingsoft/pyarmor">Pyarmor</a></p>
+<h2 id="run-and-import-encrypted-module">Run and Import encrypted module</h2>
+<p><a href="examples/pybench">pybench</a> is a collection of tests that provides a standardized way to measure the performance of Python implementations. It's an exactly one package to verify this feature.</p>
+<p>First,</p>
+<h3 id="generate-a-project-capsule">Generate a project capsule</h3>
+<p>Use command &quot;capsule&quot;</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">    <span class="ex">python</span> pyarmor.py capsule pybench</code></pre></div>
+<p>Project capsule is a compressed zip file, which include all the files used to encrypt scripts. This command will generate &quot;pybench.zip&quot; in the current path.</p>
+<p>Generally, one capsule is only used for one project.</p>
+<h3 id="encrypt-modules">Encrypt modules</h3>
+<p>Use command &quot;encrypt&quot;</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">    <span class="ex">python</span> pyarmor.py encrypt --with-capsule=pybench.zip --output=dist/pybench --src=examples/pybench <span class="st">&quot;*.py&quot;</span>
+    <span class="ex">python</span> pyarmor.py encrypt --with-capsule=pybench.zip --output=dist/pybench/package --src=examples/pybench/package <span class="st">&quot;*.py&quot;</span></code></pre></div>
+<ul>
+<li>--with-capsule specifies project capsule generated above. It's required.</li>
+<li>--src specifies relative path of scripts</li>
+<li>Quotation mark is required for argument &quot;*.py&quot;, otherwise selected files is in the current path other than <strong>src</strong> path.</li>
+</ul>
+<p>This command will encrypte all scripts of pybench and saved to &quot;dist/pybench&quot;</p>
+<pre><code>    ls dist/pybench
+    
+    _pytransform.dll  Dict.py        Lookups.py       pyimcore.py     systimes.py
+    Arithmetic.py     Exceptions.py  NewInstances.py  pyshield.key    Tuples.py
+    Calls.py          Imports.py     Numbers.py       pyshield.lic    Unicode.py
+    clockres.py       Instances.py   package          pytransform.py  With.py
+    CommandLine.py    license.lic    product.key      Setup.py
+    Constructs.py     Lists.py       pybench.py       Strings.py
+        </code></pre>
+<p>All of the .py files here are obfuscated like this:</p>
+<pre><code>    __pyarmor__(__name__, b&#39;xxxxxxxxxxx&#39;)</code></pre>
+<h3 id="run-and-imported-encrypted-module">Run and Imported encrypted module</h3>
+<ul>
+<li>Edit <strong>dist/pybench/pybench.py</strong>, insert a line &quot;import pyimcore&quot; like this:</li>
+</ul>
+<pre><code>    import pyimcore
+    __pyarmor__(__name__, b&#39;xxx...&#39;)
+    </code></pre>
+<ul>
+<li>Run obfuscated script</li>
+</ul>
+<pre><code>    cd dist/pybench
+    python pybench.py
+</code></pre>
+<h2 id="bind-encrypted-script-to-fix-machine-or-expired-it">Bind encrypted script to fix machine or expired it</h2>
+<p>Maybe you want to import encrypted scripts only in some special machine, or expired it at some point. Pyarmor command &quot;license&quot; is just for this case.</p>
+<p>Command &quot;encrypt&quot; generates some extra files include &quot;license.lic&quot;. In above example, it's in the output path &quot;dist/pybench&quot;. It's necessary to run or import encrypted scripts. This file is a part of project capsule, can be used in any machine and never expired.</p>
+<p>Command &quot;license&quot; will generate special &quot;license.lic&quot;, which could be bind to fixed machine or expired.</p>
+<p>Now let's generate a license file bind to this machine, first got</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">    <span class="ex">python</span> pyarmor.py hdinfo
+
+    <span class="ex">It</span> prints harddisk infomation as the floowing
+
+    <span class="ex">Harddisk</span><span class="st">&#39;s serial number is &#39;</span>100304PBN2081SF3NJ5T<span class="st">&#39;</span></code></pre></div>
+<p>Run command &quot;license&quot;</p>
+<pre><code>    python pyarmor.py license --with-capsule=pybench.zip --bind-disk &quot;100304PBN2081SF3NJ5T&quot;</code></pre>
+<p>This command will generate a &quot;license.lic.txt&quot; in the current path.</p>
+<p>Continue above example, replace &quot;examples/pybench/license.lic&quot; with this &quot;license.lic.txt&quot;</p>
+<pre><code>    cp license.lic.txt dist/pybench/license.lic</code></pre>
+<p>Run pybench.py again</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">    <span class="bu">cd</span> dist/pybench
+    <span class="ex">python</span> pybench.py</code></pre></div>
+<p>It should work in this machine. If you copy &quot;dist/pybench&quot; to other machine, it will failed to run pybench.py.</p>
+<h3 id="generate-a-expired-license">Generate a expired license</h3>
+<pre><code>    python pyarmor.py license --with-capsule=pybench.zip --expired-date=2018-05-30</code></pre>
+<p>The &quot;license.lic.txt&quot; generate by this command will expired on May 30, 2018</p>
+<h3 id="combined-license">Combined license</h3>
+<pre><code>    python pyarmor.py license --with-capsule=pybench.zip --expired-date=2018-05-30 --bind-disk &quot;100304PBN2081SF3NJ5T&quot;</code></pre>
+<p>The &quot;license.lic.txt&quot; generate by this command will expired on May 30, 2018 and only could be used in this machine.</p>
+<h2 id="examples">Examples</h2>
+<h3 id="use-odoo-with-obfuscated-module-scripts">Use odoo with obfuscated module scripts</h3>
+<p>There is a odoo module &quot;odoo_web_login&quot;:</p>
+<pre><code>    odoo_web_login/
+        __init__.py
+        mod_a.py
+        mod_b.py
+        
+        controller/
+            __init__.py
+            mod_c.py
+      </code></pre>
+<p>Now run the following command in the src path of Pyarmor:</p>
+<pre><code>    # Generate capsule at first
+    python pyarmor.py capsule myodoo
+    
+    # Obfuscate scripts, assume ${src} is the parent path of &quot;odoo_web_login&quot;
+    python pyarmor.py encrypt --with-capsule=myodoo.zip --output=dist/odoo_web_login --src=${src}/odoo_web_login &quot;*.py&quot;
+    python pyarmor.py encrypt --with-capsule=myodoo.zip --output=dist/odoo_web_login/controller --src=${src}/odoo_web_login/controller &quot;*.py&quot;
+    
+    # Edit &quot;dist/odoo_web_login/__init__.py&quot;, insert a line &quot;import pyimcore&quot; before the first line
+    
+    # Copy obfuscated scripts and all extra files to ${src}. Note: it will overwrite original scripts
+    cp dist/odoo_web_login/* ${src}/odoo_web_login
+    cp dist/odoo_web_login/controller/* ${src}/odoo_web_login/controller
+    
+    # Restart odoo again.</code></pre>
+<h3 id="use-py2exe-with-obfuscated-scripts">Use py2exe with obfuscated scripts</h3>
+<p>First install py2exe, run py2exe-0.6.9.win32-py2.7.exe</p>
+<p>There is an example of py2exe: <strong>C:/Python27/Lib/site-packages/py2exe/samples/simple</strong></p>
+<p>Edit <strong>setup.py</strong>, comment line 33 if you don't have wxPython installed</p>
+<pre><code>    # windows = [&quot;test_wx.py&quot;],
+    console = [&quot;hello.py&quot;],</code></pre>
+<p>Run py2exe,</p>
+<pre><code>    cd C:/Python27/Lib/site-packages/py2exe/samples/simple
+    C:/Python27/python setup.py py2exe</code></pre>
+<p>Then encrypt python scripts</p>
+<pre><code>    cd ${pyarmor_installed_path}
+    C:/Python27/python pyarmor.py capsule myproject
+    C:/Python27/python pyarmor.py encrypt --with-capsule=myproject.zip --output=dist \
+                       --src=C:/Python27/Lib/site-packages/py2exe/samples/simple \
+                       hello.py</code></pre>
+<p>Edit <strong>dist/hello.py</strong>, insert &quot;import pyimcore&quot; at the begin of this script. Only main script need this patch, all the other modules need nothing to do.</p>
+<p>Copy all the py file to source path <strong>simple</strong></p>
+<pre><code>    cd dist
+    cp  pyimcore.py pytransform.py hello.py C:/Python27/Lib/site-packages/py2exe/samples/simple
+</code></pre>
+<p>Copy all the others file to py2exe's dist</p>
+<pre><code>    cp _pytransform.dll pyshield.lic pyshield.key product.key license.lic \
+       C:/Python27/Lib/site-packages/py2exe/samples/simple/dist</code></pre>
+<p>Edit <strong>setup.py</strong> again, add an extra line:</p>
+<pre><code>    py_modules = [&quot;pyimcore&quot;, &quot;pytransform&quot;], </code></pre>
+<p>Patch <strong>pytransform.py</strong>,</p>
+<pre><code>    1. Comment line 188~189
+    
+    # if not os.path.abspath(&#39;.&#39;) == os.path.abspath(path):
+    #    m.set_option(&#39;pyshield_path&#39;.encode(), path.encode())
+
+    2. Replace line 181 with
+    
+    m = cdll.LoadLibrary(&#39;_pytransform.dll&#39;)
+</code></pre>
+<p>Run py2exe again:</p>
+<pre><code>    cd C:/Python27/Lib/site-packages/py2exe/samples/simple
+    C:/Python27/python setup.py py2exe</code></pre>
+<p>Now run &quot;hello.exe&quot;</p>
+<pre><code>    cd dist
+    ./hello.exe</code></pre>
+<h1 id="command-line-options">Command Line Options</h1>
+<pre><code>Usage: pyarmor [command name] [options]
+
+Command name can be one of the following list
+
+  help                Show this usage
+  version             Show version information
+  capsule             Generate project capsule used to encrypted files
+  encrypt             Encrypt the scripts
+  license             Generate registration code
+
+If you want to know the usage of each command, type the
+following command:
+
+  pyarmor help [command name]
+
+and you can type the left match command, such as
+
+   pyarmor c
+or pyarmor cap
+or pyarmor capsule
+</code></pre>
+
+</body>
+</html>

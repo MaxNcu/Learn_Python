@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>mechanism.html</title>
+
+</head>
+
+<body>
+
+<h1 id="how-to-obfuscate-python-script-by-pyarmor">How to Obfuscate Python Script by Pyarmor</h1>
+<p>From Pyarmor 3.3.0, a new mode is introduced. By this way, no import hooker, no setprofile, no settrace. The performance of running or importing obfuscation python script has been remarkably improved.</p>
+<h2 id="mechanism">Mechanism</h2>
+<p>There are 2 ways to protect Python Scripts by Pyarmor:</p>
+<ul>
+<li>Obfuscate byte code of each code object</li>
+<li>Obfuscate whole code object of python module</li>
+</ul>
+<h3 id="obfuscate-python-scripts">Obfuscate Python Scripts</h3>
+<ul>
+<li>Compile python source file to code object</li>
+</ul>
+<pre><code>    char * filname = &quot;xxx.py&quot;;
+    char * source = read_file( filename );
+    PyObject *co = Py_CompileString( source, filename, Py_file_input );</code></pre>
+<ul>
+<li>Iterate code object, wrap bytecode of each code object as the following format</li>
+</ul>
+<pre><code>    0   JUMP_ABSOLUTE            n = 3 + len(bytecode)
+    
+    3
+    ...
+    ... Here it&#39;s obfuscated bytecode
+    ...
+    
+    n   LOAD_GLOBAL              ? (__armor__)
+    n+3 CALL_FUNCTION            0
+    n+6 POP_TOP
+    n+7 JUMP_ABSOLUTE            0
+</code></pre>
+<ul>
+<li>Serialize code object and obfuscate it</li>
+</ul>
+<pre><code>    char *original_code = marshal.dumps( co );
+    char *obfuscated_code = obfuscate_algorithm( original_code  );</code></pre>
+<ul>
+<li>Create wrapper script &quot;xxx.py&quot;, <strong>${obfuscated_code}</strong> stands for string constant generated in previous step.</li>
+</ul>
+<pre><code>    __pyarmor__(__name__, b&#39;${obfuscated_code}&#39;)</code></pre>
+<h3 id="run-or-import-obfuscated-python-scripts">Run or Import Obfuscated Python Scripts</h3>
+<p>When import or run this wrapper script, the first statement is to call a CFunction:</p>
+<pre><code>    int __pyarmor__(char *name, unsigned char *obfuscated_code) {
+      char *original_code = resotre_obfuscated_code( obfuscated_code );
+      PyObject *co = marshal.loads( original_code );
+      PyObject *mod = PyImport_ExecCodeModule( name, co );
+    }</code></pre>
+<p>This function accepts 2 parameters: module name and obfuscated code, then</p>
+<ul>
+<li>Restore obfuscated code</li>
+<li>Create a code object by original code</li>
+<li>Import original module <strong>(this will result in a duplicated frame in Traceback)</strong></li>
+</ul>
+<h4 id="run-or-import-obfuscated-bytecode">Run or Import Obfuscated Bytecode</h4>
+<p>After module imported, when any code object in this module is called first time, from the wrapped bytecode descripted in above section, we know</p>
+<ul>
+<li><p>First op is JUMP_ABSOLUTE, it will jump to offset n</p></li>
+<li><p>At offset n, the instruction is to call a PyCFunction. This function will restore those obfuscated bytecode between offset 3 and n, and place the original bytecode at offset 0</p></li>
+<li><p>After function call, the last instruction is to jump to offset 0. The really bytecode now is executed.</p></li>
+</ul>
+<h2 id="usage">Usage</h2>
+<p>In Pyarmor 3.3, there are 2 modes to obfucate python scripts:</p>
+<ul>
+<li>mode 7: only code object of python module is obfuscated, it's almost quickly as no obfuscated module.</li>
+</ul>
+<pre><code>    python pyarmor.py --with-capsule=project.zip --output=dist --mode=7 foo.py
+    </code></pre>
+<ul>
+<li>mode 8: both code object and bytecode are obfuscated, it's slower but more secure. It's the default mode.</li>
+</ul>
+<pre><code>    python pyarmor.py --with-capsule=project.zip --output=dist --mode=8 foo.py
+</code></pre>
+<h3 id="change-obfuscated-algorithm">Change Obfuscated Algorithm</h3>
+<p>For mode 8, there is another option which could reduce the elapsed time</p>
+<pre><code># First change to src path of pyarmor
+cd ..
+
+# Edit pytransform.py
+vi pytransform.py
+
+# Uncomment line 187
+
+    # m.set_option(&#39;disable_obfmode_encrypt&#39;.encode(), c_char_p(1))
+
+# Change to
+
+    m.set_option(&#39;disable_obfmode_encrypt&#39;.encode(), c_char_p(1))
+    </code></pre>
+<p>By default, bytecode will be encrypted by DES algorithm. If it's disabled, another simple algorithm is applied, it's fater than DES remarkably.</p>
+<h2 id="performance-analaysis">Performance Analaysis</h2>
+<p>With default configuration, Pyarmor will do the following extra work to run or import obfuscated bytecode:</p>
+<ul>
+<li>Load library _pytransform at startup</li>
+<li>Initialize library _pytransform at startup</li>
+<li>Veirfy license at startup</li>
+<li>Restore obfuscated code object of python module</li>
+<li>Restore obfuscated bytecode when code object is called first time</li>
+</ul>
+<p>There is a script &quot;benchmark.py&quot; in the package of Pyarmor used to check performance. First run it to prepare test data</p>
+<pre><code>python benchmark.py bootstrap MODE
+</code></pre>
+<p><strong>MODE</strong> could be 7, 8, and the default value is 8</p>
+<p>For example,</p>
+<pre><code>python benchmark.py bootstrap</code></pre>
+<p>It will create directory &quot;test-bench&quot;, change to this directory, and run benchmark.py again. In my laptop, the output is</p>
+<pre><code>cd test-bench
+python benchmark.py
+
+load_pytransform: 1.93544151561 ms
+init_pytransform: 1.29848905378 ms
+verify_license: 0.727187393929 ms
+
+Test script: bfoo.py
+Obfuscated script: obfoo.py
+Start test with mode 8
+--------------------------------------
+
+import_no_obfuscated_module: 0.315403214654 ms
+import_obfuscated_module: 1.37224144409 ms
+
+run_empty_no_obfuscated_code_object: 0.00474920695228 ms
+run_empty_obfuscated_code_object: 0.0441396881447 ms
+
+run_one_thousand_no_obfuscated_bytecode: 0.00502857206712 ms
+run_one_thousand_obfuscated_bytecode: 0.117333348233 ms
+
+run_ten_thousand_no_obfuscated_bytecode: 0.00642539764132 ms
+run_ten_thousand_obfuscated_bytecode: 0.726908028814 ms
+
+</code></pre>
+<p>Here it's a normal license checked by verify_license. If the license is bind to fixed machine, for example, mac address, it need more time to read hardware information.</p>
+<p>import_obfuscated_module will first restore obfuscated code object, then import this pre-compiled code object. import_no_obfuscated_module need time to compile source script, so it spends more time.</p>
+<p>The bytecode size of function one_thousand is about 1K, and ten_thousand is about 10K. Most of them will not be executed, because they're in False condition for ever. So run_empty, run_one_thousand, run_ten_thousand are almost same in non-obfuscated mode, about 0.004 ms.</p>
+<p>In obfuscated mode, it's about 0.1 ms for 1K bytecoe, and 0.7~0.8 ms for 10K bytecode in my laptop. It's mainly consumed by restoring obfuscated bytecodes.</p>
+<p>Now let's test mode 7</p>
+<pre><code>cd ..
+python benchmark.py bootstrap 7
+
+cd test-bench
+python benchmark.py
+
+load_pytransform: 1.74212085614 ms
+init_pytransform: 1.29625413286 ms
+verify_license: 0.757079461216 ms
+
+Test script: bfoo.py
+Obfuscated script: obfoo.py
+Start test with mode 7
+--------------------------------------
+
+import_no_obfuscated_module: 0.325739723903 ms
+import_obfuscated_module: 1.32474937457 ms
+
+run_empty_no_obfuscated_code_object: 0.00446984183744 ms
+run_empty_obfuscated_code_object: 0.00363174649292 ms
+
+run_one_thousand_no_obfuscated_bytecode: 0.00502857206712 ms
+run_one_thousand_obfuscated_bytecode: 0.00363174649292 ms
+
+run_ten_thousand_no_obfuscated_bytecode: 0.006984127871 ms
+run_ten_thousand_obfuscated_bytecode: 0.00391111160776 ms
+</code></pre>
+<p>Notice it almost spends same time with no obfuscate scripts. Because bytecode of each code object isn't obfuscated.</p>
+<h1 id="deprecated-mode">DEPRECATED Mode</h1>
+<p>The following modes are used by Pyarmor before v3.2.0. It requires import hooker, for example, sys.meta_path, and sys.setprofile or sys.settrace. Especially the latter, it could dramatically effect performance.</p>
+<h2 id="mode-0">Mode 0</h2>
+<h3 id="py_source">Py_Source</h3>
+<p><strong>Encrypt</strong></p>
+<ul>
+<li>Compile source to Code Object</li>
+<li>Encrypt bytecode of each Code Object</li>
+<li>Encrypt Code Object</li>
+<li>Write to file with &quot;.pye&quot;</li>
+</ul>
+<p><strong>Decrypt</strong></p>
+<p>Add import hooker to sys.meta_path, when an encrypted module found:</p>
+<ul>
+<li>Decrypt source file</li>
+<li>Add hook by sys.setprofile</li>
+<li>Before each code object is called, profile hook will decrypt byte-code</li>
+<li>After code object is to be return, profile hokk will encrypt byte-code again</li>
+</ul>
+<h3 id="py_compiled">Py_Compiled</h3>
+<p><strong>Encrypt</strong></p>
+<ul>
+<li>Read compiled file to Code Object</li>
+<li>Encrypt bytecode of each Code Object</li>
+<li>Encrypt Code Object</li>
+<li>Write to file with &quot;.pye&quot;</li>
+</ul>
+<p><strong>Decrypt</strong></p>
+<p>Add import hooker to sys.meta_path, when an encrypted module found:</p>
+<ul>
+<li>Decrypt source file</li>
+<li>Add hook by sys.setprofile</li>
+<li>Before each code object is called, profile hook will decrypt byte-code</li>
+<li>After code object is to be return, profile hokk will encrypt byte-code again</li>
+</ul>
+<h2 id="mode-1">Mode 1</h2>
+<h3 id="py_source-1">Py_Source</h3>
+<p><strong>Encrypt</strong></p>
+<ul>
+<li>Compile source to Code Object</li>
+<li>Encrypt bytecode of each Code Object</li>
+<li><strong>DO NOT</strong> Encrypt Code Object</li>
+<li>Write to file with &quot;.pyc&quot;</li>
+</ul>
+<p><strong>Decrypt</strong></p>
+<ul>
+<li>Import compiled file as normal</li>
+<li>Add hook by sys.setprofile</li>
+<li>Before each code object is called, profile hook will decrypt byte-code</li>
+<li>After code object is to be return, profile hokk will encrypt byte-code again</li>
+</ul>
+<p><strong>No extra import hooker needed</strong></p>
+<h3 id="py_compiled-1">Py_Compiled</h3>
+<p><strong>Encrypt</strong></p>
+<ul>
+<li>Read compiled file to Code Object</li>
+<li>Encrypt bytecode of each Code Object</li>
+<li><strong>DO NOT</strong> encrypt Code Object</li>
+<li>Write to file with &quot;.pyc&quot; or &quot;.pyo&quot;</li>
+</ul>
+<p><strong>Decrypt</strong></p>
+<ul>
+<li>Import compiled file as normal</li>
+<li>Add hook by sys.setprofile</li>
+<li>Before each code object is called, profile hook will decrypt byte-code</li>
+<li>After code object is to be return, profile hokk will encrypt byte-code again</li>
+</ul>
+<p><strong>No extra import hooker needed</strong></p>
+<h2 id="mode-2">Mode 2</h2>
+<h3 id="py_source-2">Py_Source</h3>
+<p><strong>Encrypt</strong></p>
+<ul>
+<li>Compile source to Code Object</li>
+<li><strong>DO NOT</strong> Encrypt bytecode of each Code Object</li>
+<li>Encrypt Code Object</li>
+<li>Write to file with &quot;.pye&quot;</li>
+</ul>
+<p><strong>Decrypt</strong></p>
+<p>Add import hooker to sys.meta_path, when an encrypted module found:</p>
+<ul>
+<li>Decrypt source file</li>
+<li>Import decrypted script as normal</li>
+</ul>
+<p><strong>No sys.setprofile needed</strong></p>
+<h3 id="py_compiled-2">Py_Compiled</h3>
+<p><strong>Encrypt</strong></p>
+<ul>
+<li>Read compiled file to Code Object</li>
+<li><strong>DO NOT</strong> encrypt bytecode of each Code Object</li>
+<li>Encrypt Code Object</li>
+<li>Write to file with &quot;.pyc&quot; or &quot;.pyo&quot;</li>
+</ul>
+<p><strong>Decrypt</strong></p>
+<p>Add import hooker to sys.meta_path, when an encrypted module found:</p>
+<ul>
+<li>Decrypt compiled file</li>
+<li>Import compiled file as normal</li>
+</ul>
+<p><strong>No sys.setprofile needed</strong></p>
+<h2 id="compare-3-modes">Compare 3 modes</h2>
+<pre><code>MODE             0                    1                    2
+
+import hooker   NEED                 No                   Need
+profile hooker  NEED                 Need                 No
+performance     low                  high                 medium
+security        high                 medium               low</code></pre>
+<h2 id="limitations">Limitations</h2>
+<h3 id="sys.meta_path">sys.meta_path</h3>
+<p>Used to hook importer, so that encrypted source file can be imported</p>
+<h3 id="sys.setprofilesys.settrace">sys.setprofile/sys.settrace</h3>
+<p>Use any of one to decrypt byte-code in runtime</p>
+<h3 id="threading.setprofilethreading.settrace">threading.setprofile/threading.settrace</h3>
+<p>Use any of one to decrypt byte-code in runtime in other thread (not main thread)</p>
+<h3 id="py_trace_refs-or-py_debug">Py_TRACE_REFS or Py_DEBUG</h3>
+<p>If Py_TRACE_REFS or Py_DEBUG is defined, the size of_PyObject_HEAD_EXTRA will not be 0. In this case, f_code is not right and pytransform will not work.</p>
+<h3 id="about-package">About package</h3>
+<p><strong>It works if package is only in one path</strong></p>
+<pre><code>    a/pkg/__init__.pye
+         foo.pye
+         hello.py
+</code></pre>
+<p><strong>If one package locates at different path, any of <strong>init</strong>.py CAN NOT be encrypted</strong></p>
+<p>It works if none of __init__.py is encrypted</p>
+<pre><code>    a/pkg/__init__.py
+         foo.pye
+         hello.pye
+
+    b/pkg/__init__.py
+         foo2.pye
+         hello2.py
+</code></pre>
+<p>It doesn't work if both of __init__.py are encrypted</p>
+<pre><code>    a/pkg/__init__.pye
+         foo.pye
+         hello.py
+
+    b/pkg/__init__.pye
+         foo2.py
+         hello2.py
+</code></pre>
+<p>It doesn't work if any of __init__.py is encrypted</p>
+<pre><code>    a/pkg/__init__.pye
+         foo.pye
+         hello.py
+
+    b/pkg/__init__.py
+         foo2.py
+         hello2.py
+</code></pre>
+
+</body>
+</html>

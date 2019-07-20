@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>tutorial.html</title>
+
+</head>
+
+<body>
+
+<h1 id="pyarmor-webapp-tutorial">Pyarmor WebApp Tutorial</h1>
+<p>Pyarmor is a tool used to run and import encrypt python scripts.</p>
+<p>WebApp is a web-gui interface of Pyarmor. This tutorial mainly show the usage of WebApp.</p>
+<h2 id="download">Download</h2>
+<p>First download Pyarmor WebApp from <a href="https://github.com/dashingsoft/pyarmor/releases/download/v3.3.0/pyarmor-webapp.zip" class="uri">https://github.com/dashingsoft/pyarmor/releases/download/v3.3.0/pyarmor-webapp.zip</a></p>
+<p>Then extract it to any path, for example <strong>/opt</strong>. In this turorial, <strong>/opt</strong> will be as the installed path of Pyarmor WebApp. Replace it with real path when run these examples.</p>
+<h2 id="startup">Startup</h2>
+<p>Enter path <strong>/opt/pyarmor/webapp</strong>, double click <strong>start-server.bat</strong> for Windows or <strong>start-server.sh</strong> for Linux.</p>
+<p>Or start WebApp from command line, suppose python installed at <strong>D:/tools/Python27</strong></p>
+<pre><code>cd /opt/pyarmor/webapp
+D:/tools/Python27/python server.py
+</code></pre>
+<p>It will lanch a console window, at the same time a web page will be opened in the web browser. This is WebApp.</p>
+<p>Click tab <strong>Project</strong>, enter the graphic world of Pyarmor.</p>
+<div class="figure">
+<img src="images/pyarmor-webapp.jpg" />
+
+</div>
+<h3 id="demo-mode">Demo Mode</h3>
+<p>If there is a button <strong>Demo Version</strong> in the top right corner of tab <strong>Project</strong>, it is to say, Oh, what I'm doing is not reality. The purpose of this mode is only to help users to understand the functions of Pyarmor, there are 2 cases:</p>
+<ul>
+<li><a href="http://pyarmor.dashingsoft.com">Pyarmor official online demo</a></li>
+<li>Open <strong>/opt/pyarmor/webapp/index.html</strong> in web browser directly.</li>
+</ul>
+<h2 id="usage">Usage</h2>
+<p>Here are 4 cases to show basic usage:</p>
+<ul>
+<li>First case it's to run a simple encrypted script</li>
+<li>Then a more complicated example, used encrypted module and package.</li>
+<li>Next one is to bind encrypted scripts to some machine</li>
+<li>Last is to expire encrypted scripts on some day</li>
+</ul>
+<h3 id="run-encrypted-script">Run encrypted script</h3>
+<p>This example show how to encrypt script <a href="../src/examples/queens.py">/opt/pyarmor/src/examples/queens.py</a> and run it.</p>
+<ol style="list-style-type: decimal">
+<li><p>Encrypt script</p>
+<ul>
+<li>Type <strong>Title</strong>, <strong>Base Path</strong>, <strong>Startup Script</strong>, <strong>Build Path</strong> as the following figure</li>
+<li>Click button <strong>Encrypt</strong></li>
+</ul>
+<div class="figure">
+<img src="images/project-queen.jpg" />
+
+</div>
+<p>After this action, in the <strong>Build Path</strong> <strong>/opt/pyarmor/webapp/build</strong>, enccrypted script <strong>queens.py</strong>, and some extra files will be found.</p></li>
+<li><p>Run it</p></li>
+</ol>
+<pre><code>    # Encrypted files are saved here
+    cd /opt/pyarmor/webapp/build
+
+    # Run ecnrypted queens.py with arguments &quot;6&quot;
+    python queens.py 6
+</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Check the content of queens.py</li>
+</ol>
+<pre><code>    import pyimcore
+    __pyarmor__(__name__, b&#39;xxxxx&#39;)
+</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Click button <strong>Save</strong> to save project information</li>
+</ol>
+<h3 id="import-encrypted-module">Import encrypted module</h3>
+<p><a href="../src/examples/pybench">/opt/pyarmor/src/examples/pybench</a> is a collection of tests that provides a standardized way to measure the performance of Python implementations. This example show how to use encrypted pybench.</p>
+<h4 id="encrypt-modules">Encrypt modules</h4>
+<ul>
+<li><p>Click button <strong>New</strong> to create a new project</p></li>
+<li><p>Type <strong>Title</strong>, <strong>Base Path</strong>, <strong>Build Path</strong>, <strong>MANIFEST.in</strong> as the following figure</p>
+<div class="figure">
+<img src="images/project-pybench.jpg" />
+
+</div>
+<p>About the format of <strong>MANIFEST.in</strong>, refer to appendix <a href="#manifest.in">MANIFEST.in</a></p></li>
+<li><p>Click side tab <strong>Advanced</strong></p></li>
+<li><p>Click button <strong>Save</strong> to save project information</p></li>
+<li><p>Click button <strong>Encrypt</strong></p>
+<p>All the encrypted files will saved in <strong>Build Path</strong></p></li>
+</ul>
+<h4 id="run-pybench-to-import-encrypted-modules">Run pybench to import encrypted modules</h4>
+<ul>
+<li>Run pybench.py in command window</li>
+</ul>
+<pre><code>    cd /opt/pyarmor/webapp/build/pybench
+    python pybench.py</code></pre>
+<ul>
+<li>Check encrypted file &quot;pybench.py&quot;</li>
+</ul>
+<pre><code>    import pyimcore
+    __pyarmor__(__name__, b&#39;xxx&#39;)</code></pre>
+<h3 id="bind-encrypted-script-to-one-machine">Bind encrypted script to one machine</h3>
+<p>This examble show how to bind encrypted script to this machine. Here we reuse project <strong>Queen</strong> created in the first example, the encrypted script has been saved in <strong>/opt/pyarmor/webapp/build</strong>.</p>
+<ul>
+<li>Get serial number of harddisk before this example</li>
+</ul>
+<pre><code>    cd /opt/pyarmor/src
+    python pyarmor.py hdinfo
+    Harddisk&#39;s serial number is &#39;100304PBN2081SF3NJ5T&#39;</code></pre>
+<ul>
+<li>Click button <strong>Open</strong>, back first example</li>
+<li><p>Select <strong>project-1:Queen</strong> in the project list, then click <strong>Open</strong> in the dialog</p>
+<div class="figure">
+<img src="images/project-open.jpg" />
+
+</div></li>
+<li>Click side tab <strong>Licenses</strong></li>
+<li>Check <strong>Run encrypted scripts in special machine, type harddisk serial number of target machine</strong></li>
+<li><p>Type <strong>100304PBN2081SF3NJ5T</strong> in the below text box</p>
+<div class="figure">
+<img src="images/project-license-1.jpg" />
+
+</div></li>
+<li><p>Click bottom button <strong>Generate</strong></p>
+<div class="figure">
+<img src="images/project-license-2.jpg" />
+
+</div>
+<p>Note that new license will be list in <strong>Available Licenses</strong>, here it is <strong>Bind to 100304PBN2081SF3NJ5T (projects\project-2\license-0.lic)</strong></p>
+<p>The license filename is the part in the parentheses, fullpath would be <strong>/opt/pyarmor/webapp/projects/project-2/license-0.lic</strong></p></li>
+<li><p>Replace the default license <strong>/opt/pyarmor/webapp/build/license.lic</strong> generated in first example</p></li>
+</ul>
+<pre><code>    cp /opt/pyarmor/webapp/projects/project-2/license-0.lic /opt/pyarmor/webapp/build/license.lic</code></pre>
+<ul>
+<li>Run queens.py again</li>
+</ul>
+<pre><code>    cd /opt/pyarmor/webapp/build
+    python queens.py
+</code></pre>
+<p>It would not work if you run queens.py in other machine.</p>
+<h3 id="expire-encrypted-script-on-some-day">Expire encrypted script on some day</h3>
+<p>This examble show how to expire encrypted script on some day. Here we still reuse project <strong>Queen</strong>.</p>
+<ul>
+<li>Click side tab <strong>Licenses</strong></li>
+<li>Check <strong>Expired encrypted scripts at some point, type expired date (YYYY-MM-NN)</strong></li>
+<li><p>Type <strong>2017-12-25</strong> in the below text box</p>
+<div class="figure">
+<img src="images/project-license-3.jpg" />
+
+</div></li>
+<li><p>Click bottom button <strong>Generate</strong></p>
+<p>New license will be list in <strong>Available Licenses</strong>, the filename will be shown in the parentheses.</p></li>
+<li><p>Replace <strong>/opt/pyarmor/webapp/build/license.lic</strong> with this file as above example</p></li>
+<li><p>Run queens.py again</p>
+<p>It would not work after Christmas of 2017 even in this machine.</p></li>
+</ul>
+<h2 id="appendix">Appendix</h2>
+<h3 id="manifest.in">MANIFEST.in</h3>
+<p>The manifest template has one command per line, where each command specifies a set of files to include or exclude from the encrypted project. For an example, let’s look at the Distutils’ own manifest template:</p>
+<pre><code>include *.py
+recursive-include examples *.py
+</code></pre>
+<p>The meanings should be fairly clear: include all files in the project path matching <em>.py, all files anywhere under the examples directory matching </em>.py. All of this is done after the standard include set, so you can exclude files from the standard set with explicit instructions in the manifest template.</p>
+<pre><code>              Command                             Description
+---------------------------------------------------------------------------------------------------------------------------
+include pat1 pat2 ...                include all files matching any of the listed patterns
+exclude pat1 pat2 ...                exclude all files matching any of the listed patterns
+recursive-include dir pat1 pat2 ...  include all files under dir matching any of the listed patterns
+recursive-exclude dir pat1 pat2 ...  exclude all files under dir matching any of the listed patterns
+global-include pat1 pat2 ...         include all files anywhere in the source tree matching — &amp; any of the listed patterns
+global-exclude pat1 pat2 ...         exclude all files anywhere in the source tree matching — &amp; any of the listed patterns
+prune dir                            exclude all files under dir
+graft dir                            include all files under dir
+</code></pre>
+<p>The patterns here are Unix-style “glob” patterns: * matches any sequence of regular filename characters, ? matches any single regular filename character, and [range] matches any of the characters in range (e.g., a-z, a-zA-Z, a-f0-9_.). The definition of “regular filename character” is platform-specific: on Unix it is anything except slash; on Windows anything except backslash or colon.</p>
+
+</body>
+</html>

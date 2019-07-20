@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>tutorial-zh.html</title>
+
+</head>
+
+<body>
+
+<h1 id="pyarmor-webapp-使用教程">Pyarmor WebApp 使用教程</h1>
+<p>Pyarmor 是一个导入和运行加密 Python 脚本的命令行工具。</p>
+<p>WebApp 是网页版的图形界面，它通过启动一个本地的 Web 服务来调用 Pyarmor 的提供的功能。</p>
+<p>本教程主要是讲解如何使用 WebApp。</p>
+<h2 id="下载">下载</h2>
+<p>首先是下载 Pyarmor WebApp，下载地址： <a href="https://github.com/dashingsoft/pyarmor/releases/download/v3.3.0/pyarmor-webapp.zip" class="uri">https://github.com/dashingsoft/pyarmor/releases/download/v3.3.0/pyarmor-webapp.zip</a></p>
+<p>解压下载文件到任意目录，例如 <strong>/opt</strong>。本教程后面的章节都是以 <strong>/opt</strong> 作为 WebApp 的安装路径，运行里面的例子需要把它替换成为实际的安装路径。</p>
+<h2 id="启动">启动</h2>
+<p>打开文件夹 <strong>/opt/pyarmor/webapp</strong>，双击 <strong>start-server.bat</strong> for Windows 或者 <strong>start-server.sh</strong> for Linux</p>
+<p>也可以通过命令行方式启动，假定 python 的安装路径为 <strong>D:/tools/Python27</strong></p>
+<pre><code>cd /opt/pyarmor/webapp
+D:/tools/Python27/python server.py
+</code></pre>
+<p>这条命令会打开一个控制台，显示服务器的行为动态，同时本机默认的浏览器会自动打开一个网页，这就是 WebApp。</p>
+<p>单击 <strong>项目</strong>, 进入 Pyarmor 的世界</p>
+<div class="figure">
+<img src="images/zh/pyarmor-webapp.jpg" />
+
+</div>
+<p>我们下面的操作主要就是在这个网页里面进行的，另外还需要打开一个命令窗口执行相关的 Python 命令。</p>
+<h3 id="演示模式">演示模式</h3>
+<p>如果在项目页面的右上角有个 <strong>演示版本</strong> 的按钮，那就是说，WebApp 现在只能演示功能。通常情况下，有两种方式会进入演示模块</p>
+<ul>
+<li><a href="http://pyarmor.dashingsoft.com">Pyarmor WebApp 官方在线版</a></li>
+<li>直接在文件夹打开 <strong>/opt/pyarmor/webapp/index-zh.html</strong></li>
+</ul>
+<h2 id="使用方法">使用方法</h2>
+<p>下面通过四个例子来演示 WebApp 的主要功能：</p>
+<ul>
+<li>第一个例子最简单，运行一个加密的脚本</li>
+<li>第二个稍微复杂一些，演示如何导入加密的模块和包（Package）</li>
+<li>第三个例子主要是演示如何绑定加密脚本到指定机器</li>
+<li>最后一个例子演示如何设置加密脚本的有效期</li>
+</ul>
+<h3 id="运行加密脚本">运行加密脚本</h3>
+<p>在这个例子中，将会加密 <a href="../src/examples/queens.py">/opt/pyarmor/src/examples/queens.py</a>，然后运行加密后的脚本。</p>
+<ol style="list-style-type: decimal">
+<li><p>加密</p>
+<ul>
+<li>按照下图输入 <strong>标题</strong>, <strong>源路径</strong>, <strong>启动脚本</strong>, <strong>输出路径</strong></li>
+<li>点击按钮 <strong>加密</strong></li>
+</ul>
+<div class="figure">
+<img src="images/zh/project-queen.jpg" />
+
+</div>
+<p>加密成功之后在目录 <strong>/opt/pyarmor/webapp/build</strong> 下面会有加密脚本 <strong>queens.py</strong> 以及相关的辅助文件。</p></li>
+<li><p>运行</p>
+<p>在命令窗口执行里面的命令</p></li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">    <span class="co"># 进入输出目录</span>
+    <span class="bu">cd</span> /opt/pyarmor/webapp/build
+
+    <span class="co"># 执行包裹脚本，并且传入命令行参数: &quot;6&quot;</span>
+    <span class="ex">python</span> queens.py 6</code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>查看加密后的 <strong>queens.py</strong>，它的内容如下</li>
+</ol>
+<pre><code>    import pyimcore
+    __pyarmor__(__name__, b&#39;xxxxx&#39;)
+</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>最后点击按钮 <strong>保存</strong>，保存项目信息，后面的例子中还会用到这个项目。</li>
+</ol>
+<h3 id="导入加密模块">导入加密模块</h3>
+<p>第二个例子稍微复杂一些，使用一个真实的包 <a href="../src/examples/pybench">/opt/pyarmor/src/examples/pybench</a> 。这是 一个用来测试 Python 实现性能的小工具包，用在这里最合适不过了。</p>
+<p>在这个例子中，将会加密 <strong>pybench</strong> 中的所有 &quot;.py&quot; 文件，然后运行脚本 <strong>pybench.py</strong>，它可以像正常方式一样，使用导入后的加密模块。</p>
+<h4 id="加密">加密</h4>
+<ul>
+<li><p>点击按钮 <strong>新建</strong>，创建一个新的项目</p></li>
+<li><p>按照下图内容输入 <strong>标题</strong>, <strong>源路径</strong>, <strong>输出路径</strong>， <strong>MANIFEST.in</strong></p>
+<div class="figure">
+<img src="images/zh/project-pybench.jpg" />
+
+</div>
+<p>关于 <strong>MANIFEST.in</strong> 的格式，参考附录 <a href="#manifest.in">MANIFEST.in</a></p></li>
+<li><p>点击按钮 <strong>保存</strong>，保存修改后的项目</p></li>
+<li><p>点击按钮 <strong>加密</strong></p>
+<p>所有加密后的脚本存放在 <strong>输出路径</strong> <strong>/opt/pyarmor/webapp/build/pybench</strong> 下面</p></li>
+</ul>
+<h4 id="运行">运行</h4>
+<ul>
+<li>运行加密脚本 pybench.py</li>
+</ul>
+<pre><code>    cd /opt/pyarmor/webapp/build/pybench
+    python pybench.py</code></pre>
+<ul>
+<li>查看加密脚本 <strong>pybench.py</strong></li>
+</ul>
+<pre><code>    import pyimcore
+    __pyarmor__(__name__, b&#39;xxx&#39;)</code></pre>
+<h3 id="绑定加密脚本到指定机器">绑定加密脚本到指定机器</h3>
+<p>这个例子演示如何绑定加密脚本到当前机器，在之前首先要得到本机的硬盘序列号。Pyarmor 提供了一个命令可以直接获取本机的硬盘序列号，打开一个命令行窗口，执行下面的命令</p>
+<pre><code>    cd /opt/pyarmor/src
+    python pyarmor.py hdinfo
+    Harddisk&#39;s serial number is &#39;100304PBN2081SF3NJ5T&#39;</code></pre>
+<h4 id="生成许可证">生成许可证</h4>
+<p>我们继续使用第一个例子中的项目 <strong>Queen</strong>，加密后的脚本已经存放在 <strong>/opt/pyarmor/webapp/build</strong>，可以直接在这个例子里面使用。</p>
+<ul>
+<li>点击按钮 <strong>打开</strong>，弹出项目列表对话框</li>
+<li><p>在列出的项目中选中 <strong>project-1:Queen</strong>，然后点击对话框下方按钮 <strong>打开</strong></p>
+<div class="figure">
+<img src="images/zh/project-open.jpg" />
+
+</div></li>
+<li><p>点击左侧 <strong>许可证</strong></p></li>
+<li><p>选中 <strong>绑定加密脚本到指定机器</strong>，在下面的文本框输入 <strong>100304PBN2081SF3NJ5T</strong></p>
+<div class="figure">
+<img src="images/zh/project-license-1.jpg" />
+
+</div></li>
+<li><p>点击下面的按钮 <strong>生成</strong></p>
+<div class="figure">
+<img src="images/zh/project-license-2.jpg" />
+
+</div>
+<p>如上图所示，新的许可文件会显示在 <strong>所有许可方式</strong> 的列表中，上图中例子是 <strong>Bind to 100304PBN2081SF3NJ5T (projects\project-1\license-0.lic)</strong></p>
+<p>小括号里面的内容是许可证的文件名称，加上安装路径，全路径的文件名称是 <strong>/opt/pyarmor/webapp/projects/project-1/license-0.lic</strong></p></li>
+</ul>
+<h4 id="使用新的许可证">使用新的许可证</h4>
+<p>使用新的许可证只需要使用新的许可证替换默认许可证 <strong>/opt/pyarmor/webapp/build/license.lic</strong> 即可</p>
+<pre><code>    cp /opt/pyarmor/webapp/projects/project-1/license-0.lic /opt/pyarmor/webapp/build/license.lic</code></pre>
+<p>打开命令行窗口，再次运行</p>
+<pre><code>    cd /opt/pyarmor/webapp/build
+    python queens.py 6
+</code></pre>
+<p>在本机可以正常运行，但是在其他机子上，就会出错。</p>
+<h3 id="设置加密脚本的有效期">设置加密脚本的有效期</h3>
+<p>这个例子演示如何设置加密脚本的有效期，我们继续上面的操作。</p>
+<ul>
+<li>点击左侧 <strong>许可证</strong></li>
+<li><p>选中 <strong>设置加密脚本的有效期</strong>，在下面的文本框输入 <strong>2017-12-25</strong></p>
+<div class="figure">
+<img src="images/zh/project-license-3.jpg" />
+
+</div></li>
+<li><p>点击下面的按钮 <strong>生成</strong></p></li>
+</ul>
+<p>和上面的例子一样，新的许可文件会显示在 <strong>所有许可方式</strong> 的列表中，用新的许可文件替换旧的即可。</p>
+<p>打开命令窗口，再次运行</p>
+<pre><code>    cd /opt/pyarmor/webapp/build
+    python queens.py 6
+</code></pre>
+<p>这个加密脚本只能在本机运行到2071年的圣诞节。在圣诞节之后，就会出错。</p>
+<h2 id="附录">附录</h2>
+<h3 id="manifest.in">MANIFEST.in</h3>
+<p>这个模板完全参照 Python Distutils 里面相应的文件，它用来列出项目中需要加密的文件。例如</p>
+<pre><code>include *.py
+recursive-include examples *.py
+</code></pre>
+<p>上面的例子一看就能明白： 所有在项目 <strong>源路径</strong> 下面的 py 文件，递归所有在项目子目录 <strong>examples</strong> 下面的 py 文件。</p>
+<p>模板支持的命令如下表所示（从 Python 帮助文件拷贝而来）</p>
+<pre><code>              Command                             Description
+---------------------------------------------------------------------------------------------------------------------------
+include pat1 pat2 ...                include all files matching any of the listed patterns
+exclude pat1 pat2 ...                exclude all files matching any of the listed patterns
+recursive-include dir pat1 pat2 ...  include all files under dir matching any of the listed patterns
+recursive-exclude dir pat1 pat2 ...  exclude all files under dir matching any of the listed patterns
+global-include pat1 pat2 ...         include all files anywhere in the source tree matching — &amp; any of the listed patterns
+global-exclude pat1 pat2 ...         exclude all files anywhere in the source tree matching — &amp; any of the listed patterns
+prune dir                            exclude all files under dir
+graft dir                            include all files under dir
+</code></pre>
+<p>需要注意的是在 Pyarmor WebApp 中，MANIFEST.in 里面的路径都是相对于项目 <strong>源路径</strong>，并且不支持绝对路径。</p>
+
+</body>
+</html>
